@@ -10,8 +10,7 @@ import sys
 import time
 import xml.dom.minidom
 
-from coverage import env
-from coverage import __url__, __version__, files
+from coverage import __url__, __version__, env, files
 from coverage.backward import iitems
 from coverage.misc import isolate_module
 from coverage.report import get_analysis_to_report
@@ -144,15 +143,7 @@ class XmlReporter(object):
 
         # Create the 'lines' and 'package' XML elements, which
         # are populated later.  Note that a package == a directory.
-        filename = fr.filename.replace("\\", "/")
-        for source_path in self.source_paths:
-            source_path = files.canonical_filename(source_path)
-            if filename.startswith(source_path.replace("\\", "/") + "/"):
-                rel_name = filename[len(source_path)+1:]
-                break
-        else:
-            rel_name = fr.relative_filename()
-            self.source_paths.add(fr.filename[:-len(rel_name)].rstrip(r"\/"))
+        rel_name = fr.relative_filename()
 
         dirname = os.path.dirname(rel_name) or u"."
         dirname = "/".join(dirname.split("/")[:self.config.xml_package_depth])
